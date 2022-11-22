@@ -3,6 +3,7 @@
 
 ## 仓库结构
 
+```
 [database]
 ├─ [yaoyao]
 |   ├─ [2022]
@@ -17,6 +18,7 @@
 ├─ file.py
 ├─ main.json
 └─ requirements.txt
+```
 
 ### database 下的文件
 
