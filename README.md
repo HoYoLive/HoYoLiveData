@@ -56,7 +56,7 @@
 
 #### `main.json` (由`file.py`生成)
 
-列表结构。
+列表结构。<a id="mainjson"></a>
 储存当前年份所有直播的主要信息。
 例：
 ```json
@@ -97,3 +97,56 @@
 #### `search.json` (由`file.py`生成)
 
 储存当前月份所有直播的字幕文本，其余同上`search.json`。
+
+## 如何添加新数据
+
+### 下载录播文件
+
+方法1：索取官方的obs录播文件，一般为MKV格式，包含多轨音频。
+
+方法2：以 AcFun 平台为例，通过 [AcFun 助手](https://github.com/niuchaobo/acfun-helper) 等浏览器插件获取录播投稿的 `.m3u8` 地址。安装 [ffmpeg](https://ffmpeg.org/download.html) 后通过以下命令下载视频文件。
+
+```
+ffmpeg -i https://videoAddress.m3u8 -c copy -bsf:a aac_adtstoasc fileName.mp4
+```
+
+方法3：以 AcFun 平台为例，通过 [acfunlive](https://github.com/orzogc/acfunlive) 等开源项目下载直播视频。
+
+### 生成字幕文件
+
+下载 [剪映专业版](https://lv.ulikecam.com/) ，使用其内置的智能字幕完成 `.srt` 格式字幕文件的生成。
+
+1. 启动剪映专业版。
+2. 点击 开始创作。
+3. 拖入录播文件至时间轴。若单个文件长度大于2小时，请在大约1小时位置分割(ctrl+B)文件，并确保分割的时间点没有被切断的人声。
+4. 依次点击 文本 -> 智能字幕 -> 识别字幕(开始识别)。
+5. 等待字幕识别完成。
+6. 点击右上角的导出，更改“作品名称”与“保存至”，并勾选字幕导出。
+
+**字幕文件名规则**
+
+为确保字幕文件名不重复以避免不必要的错误发生，字幕文件的命名一般遵循以下规则：
+
+- 若视频来源为obs录播文件或其提取音轨，则与媒体文件同名，如：
+```
+2022-04-05 19-01-19_audio_index1.srt
+2022-04-16 14-02-21_audio_index1.srt
+```
+
+- 若视频来源为视频网站下载，则与网址中的唯一标识同名，如：
+```
+ac33707890.srt
+ac33708835_1.srt
+ac33708835_5.srt
+```
+
+### 归档
+
+1. 将导出的字幕文件放到 database -> *character* -> *year* -> *month* -> srt 文件夹下。
+2. 按照 [main.json的格式](#mainjson) 更新 database -> *character* -> *year* -> *month* -> main.json 文件。
+3. 运行如下命令，完成最后的归档操作：
+
+```
+cd database
+python file.py
+```
